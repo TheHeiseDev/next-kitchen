@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import React from 'react'
+import IngredientForm from '@/forms/ingredient.form';
+import IngredientsTable from '@/components/UI/tables/Ingredients';
 
 export const metadata: Metadata = {
   title: 'Ингридиенты',
@@ -8,7 +9,10 @@ export const metadata: Metadata = {
 
 const IngredientsPage = () => {
   return (
-    <div>page</div>
+    <div>
+      <IngredientForm/>
+      <IngredientsTable/>
+    </div>
   )
 }
 

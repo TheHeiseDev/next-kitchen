@@ -1,51 +1,55 @@
-import * as React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { AppProvider } from "@/providers/provider";
-import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
-import Header from "@/app/components/UI/layout/header";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth/auth";
+import { siteConfig } from "@/config/site.config";
+import AppLoader from "@/hoc/app-loader";
+import Header from "@/components/UI/layout/header";
+import Title from "@/components/UI/layout/title";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin"]
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin"]
 });
 
 export const metadata: Metadata = {
   title: siteConfig.title,
-  description: siteConfig.description ,
+  description: siteConfig.description
 };
 
-interface RootLaloutProps { 
-  children: React.ReactNode
-}
+export default async function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
+  const session = await auth();
 
-export default function RootLayout({ children }: Readonly<RootLaloutProps>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
-    >
-      <body className="min-h-full flex flex-col">
-        <AppProvider>
-          <Header/>
-          <main 
-            className="flex flex-col w-full justify-start items-center"
-            style={{ height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`}}>
-          {children}
-          </main>
-          <footer className="flex justify-center items-center"
-          style={{height: layoutConfig.footerHeight }}
-          >
-            <p>{siteConfig.description}</p>
-          </footer>
-        </AppProvider>
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}>
+          <SessionProvider session={session}>
+            <AppLoader>
+              <div className="flex min-h-screen flex-col justify-between">
+                <div className="flex flex-col">
+                  <Header />
+                  <main className={`flex flex-col max-w-[1024px] mx-auto px-[24px] justify-start items-center`}>
+                    <Title />
+                    {children}
+                  </main>
+                </div>
+
+                <footer
+                  className={`w-full flex items-center justify-center py-3`}
+                  style={{ height: layoutConfig.footerHeight }}
+                >
+                  <p>{siteConfig.description}</p>
+                </footer>
+              </div>
+            </AppLoader>
+          </SessionProvider>
       </body>
     </html>
   );

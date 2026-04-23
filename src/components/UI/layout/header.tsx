@@ -1,15 +1,16 @@
 "use client";
 
-import { layoutConfig } from "@/config/layout.config";
-import { siteConfig } from "@/config/site.config";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
-import { buttonVariants } from "@heroui/styles/components/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { Button } from "@heroui/button";
+import { layoutConfig } from "@/config/layout.config";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
+import { siteConfig } from "@/config/site.config";
+import { signOutFunc } from "@/actions/sign-out";
 import RegistrationModal from "../modals/registration.modal";
 import LoginModal from "../modals/login.modal";
-import { Button } from "@heroui/button";
+import { useAuthStore } from "@/store/auth.store";
 
 export const AcmeLogo = () => {
   return (
@@ -26,12 +27,20 @@ export const AcmeLogo = () => {
 
 export default function Header() {
     const pathname = usePathname();
-
+    
+    const { isAuth, session, setAuthState, status} = useAuthStore();
     const [isRegistrationOpen, setIsRegistrationOpen] = useState(false)
     const [isLoginOpen, setIsLoginOpen] = useState(false)
 
     const getNavItems = () => {
-      return siteConfig.navLinks.map(({href, label}) => {
+      return siteConfig.navLinks
+      .filter((item) => {
+        if( item.href === '/ingredients') {
+          return isAuth;
+        }
+        return true;
+      })
+      .map(({href, label}) => {
         const isActive = pathname === href;
         return (
           <NavbarItem key={href}>
@@ -46,6 +55,16 @@ export default function Header() {
         </NavbarItem>
       )
       })
+    }
+
+    const handleSignOut = async () => {
+     try {
+      await signOutFunc();
+     } catch (error) {
+      console.log('error', error);
+     }
+
+     setAuthState('unauthenticated', null);
     }
 
   return (
@@ -63,7 +82,22 @@ export default function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <Button
+        {isAuth && <p>Привет, {session?.user?.email}</p>}
+       {status === 'loading' ? <p>Загрузка... </p>: isAuth ? (
+      <NavbarItem>
+      <Button
+        as={Link}
+        color="secondary"
+        href="#"
+        variant="flat"
+        onPress={handleSignOut}
+        >
+          Выйти
+      </Button>
+    </NavbarItem>
+       ) : <>
+             <NavbarItem>
+      <Button
           as={Link}
           color="secondary"
           href="#"
@@ -72,6 +106,8 @@ export default function Header() {
           >
             Логин
         </Button>
+      </NavbarItem>
+
         <NavbarItem>
         <Button
           as={Link}
@@ -83,6 +119,7 @@ export default function Header() {
             Регистрация
         </Button>
         </NavbarItem>
+       </>}
       </NavbarContent>
 
       <RegistrationModal isOpen={isRegistrationOpen} onClose={() => setIsRegistrationOpen(false)}/>

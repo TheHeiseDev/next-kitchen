@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import React from 'react'
+import PageContent from '@/components/common/page-content';
 
 export const metadata: Metadata = {
   title: 'О Нас',
@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 
 const AboutPage = () => {
   return (
-    <div>page</div>
+    <div>
+      <PageContent/>
+    </div>
   )
 }
 
