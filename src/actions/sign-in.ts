@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth/auth";
+import { AuthError } from "next-auth";
 
 export async function signInWithCredentials(email: string, password: string) {
   try {
@@ -12,7 +13,14 @@ export async function signInWithCredentials(email: string, password: string) {
 
     return;
   } catch (error) {
-    console.error("Ошибка авторизации:", error);
-    throw error;
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          throw "Неверный email или пароль";
+          break;
+        default:
+          throw  "Что-то пошло не так";
+      }
+    }
   }
 }
