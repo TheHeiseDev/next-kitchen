@@ -1,11 +1,11 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcryptjs from "bcryptjs";
-import { ZodError } from "zod"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { signInSchema } from "@/schema/zod"
 import prisma from "@/utils/prisma"
 import { getUserFromDb } from "@/utils/user"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { signInSchema } from "@/schema/zod"
+import { ZodError } from "zod"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         } catch (error) {
           if (error instanceof ZodError) {
             // Return `null` to indicate that the credentials are invalid
-            return null;
+            throw new Error(error.message);
           }
           return null;
         }

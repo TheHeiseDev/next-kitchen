@@ -1,8 +1,8 @@
 "use server"
 
+import { ZodError } from "zod"
 import { ingredientSchema } from "@/schema/zod"
 import prisma from "@/utils/prisma"
-import { ZodError } from "zod"
 
 export const createIngredient = async (formdata: FormData) => {
     try {
@@ -44,7 +44,7 @@ export const getIngredients = async () => {
         return { success: true, ingredients }
 
     } catch (error) {
-        console.log('Ошибка при получении ингридиентов', error);
+        console.log('Ошибка при получении ингредиентов', error);
         return { error: "Ошибка при получении ингредиентов" }
     }
 }
@@ -56,7 +56,7 @@ export const deleteIngredient = async (id: string) => {
         return { success: true, ingredient }
 
     } catch (error) {
-        console.log('Ошибка при удалении ингридиента', error);
+        console.log('Ошибка при удалении ингреидиента', error);
         return { error: "Ошибка при удалении ингредиента" }
     }
 }

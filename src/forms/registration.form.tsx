@@ -5,7 +5,7 @@ import { IFormData } from "@/types/form-data";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 interface IProps {
   onClose: () => void;
@@ -18,6 +18,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
     confirmPassword: ""
   });
 
+  const [isPending, startTransition] = useTransition();
   const [errorMessage,setErrorMessage] = useState('');
 
   const validateEmail = (email: string) => {
@@ -29,16 +30,18 @@ const RegistrationForm = ({ onClose }: IProps) => {
     e.preventDefault();
     setErrorMessage('');
 
-    try {  
-    await registerUser(formData);
-    onClose();
-    } catch (error: unknown) {
-      if(error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
-        setErrorMessage(error.message);
-      }else {
-        setErrorMessage('Неизвестная ошибка');
-      }
-    }
+    startTransition(async () => {
+      try {  
+        await registerUser(formData);
+        onClose();
+        } catch (error: unknown) {
+          if(error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+            setErrorMessage(error.message);
+          }else {
+            setErrorMessage('Неизвестная ошибка');
+          }
+        }
+    })
   };
 
   return (
@@ -108,6 +111,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
         <Button  
           color="secondary"
           type="submit"
+          isLoading={isPending}
           className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-colors">
           Зарегестрироваться
         </Button>

@@ -4,7 +4,7 @@ import { signInWithCredentials } from "@/actions/sign-in";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 interface IProps {
   onClose: () => void;
@@ -16,24 +16,29 @@ const LoginForm = ({ onClose }: IProps) => {
     password: "",
   });
 
+  const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState('');
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-    try {
-      await signInWithCredentials(formData.email, formData.password);
-     
-      window.location.reload();
-  
-      onClose();
-    } catch (error: unknown) { 
-      if(error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
-        setErrorMessage(error.message);
-      }else {
-        setErrorMessage('Неизвестная ошибка');
+
+    startTransition(async () => {
+      try {
+        await signInWithCredentials(formData.email, formData.password);
+       
+        window.location.reload();
+    
+        onClose();
+      } catch (error: unknown) { 
+        if(error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+          setErrorMessage(error.message);
+        }else {
+          setErrorMessage('Неизвестная ошибка');
+        }
       }
-    }
+    })
   };
 
   return (
@@ -80,6 +85,7 @@ const LoginForm = ({ onClose }: IProps) => {
         <Button  
           color="secondary"
           type="submit"
+          isLoading={isPending}
           className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-colors">
           Войти
         </Button>
