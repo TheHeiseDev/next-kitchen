@@ -18,18 +18,27 @@ const RegistrationForm = ({ onClose }: IProps) => {
     confirmPassword: ""
   });
 
+  const [errorMessage,setErrorMessage] = useState('');
+
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-
     e.preventDefault();
+    setErrorMessage('');
 
-    const result = await registerUser(formData);
-    console.log('result', result)
+    try {  
+    await registerUser(formData);
     onClose();
+    } catch (error: unknown) {
+      if(error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+        setErrorMessage(error.message);
+      }else {
+        setErrorMessage('Неизвестная ошибка');
+      }
+    }
   };
 
   return (
@@ -89,6 +98,8 @@ const RegistrationForm = ({ onClose }: IProps) => {
           return null;
         }}
       />
+
+    {errorMessage && <p className="text-red-400">{errorMessage}</p>}
 
       <div className="flex w-[100%]  gap-4 items-center pt-8 justify-end">
          <Button variant="light" onPress={onClose}>

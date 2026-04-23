@@ -27,8 +27,9 @@ export const registerUser = async (params: IFormData) => {
       where: {email}
     })
 
+
     if(existingUser) {
-      return { error: errors.userExisting}
+      throw new Error(errors.userExisting)
     }
 
     const passwordHash = await saltAndHashPassword(password)
@@ -42,7 +43,6 @@ export const registerUser = async (params: IFormData) => {
 
     return user;
   } catch (error) {
-    console.log(errors.registration, error);
-    return { error: errors.registration };
+    throw error
   }
 }

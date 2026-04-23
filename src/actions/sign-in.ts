@@ -16,7 +16,7 @@ export async function signInWithCredentials(email: string, password: string) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          throw "Неверный email или пароль";
+          throw new Error("Неверный email или пароль");
           break;
         default:
           throw  "Что-то пошло не так";

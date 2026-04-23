@@ -16,14 +16,24 @@ const LoginForm = ({ onClose }: IProps) => {
     password: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    await signInWithCredentials(formData.email, formData.password);
-
-    window.location.reload();
-
-    onClose();
+    setErrorMessage('');
+    try {
+      await signInWithCredentials(formData.email, formData.password);
+     
+      window.location.reload();
+  
+      onClose();
+    } catch (error: unknown) { 
+      if(error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+        setErrorMessage(error.message);
+      }else {
+        setErrorMessage('Неизвестная ошибка');
+      }
+    }
   };
 
   return (
@@ -62,6 +72,7 @@ const LoginForm = ({ onClose }: IProps) => {
         }}
       />
 
+        {errorMessage && <p className="text-red-400">{errorMessage}</p>}
       <div className="flex w-[100%]  gap-4 items-center pt-5 justify-end">
         <Button variant="light" onPress={onClose}>
           Отмена
