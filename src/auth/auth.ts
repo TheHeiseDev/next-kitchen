@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 import { ZodError } from "zod"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { signInSchema } from "@/schema/zod"
-import { prisma } from "@/utils/prisma"
+import prisma from "@/utils/prisma"
 import { getUserFromDb } from "@/utils/user"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
