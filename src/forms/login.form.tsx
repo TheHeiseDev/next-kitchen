@@ -8,9 +8,10 @@ import { useState, useTransition } from "react";
 
 interface IProps {
   onClose: () => void;
+  onForgotPassword: () => void;
 }
 
-const LoginForm = ({ onClose }: IProps) => {
+const LoginForm = ({ onClose, onForgotPassword }: IProps) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -77,8 +78,12 @@ const LoginForm = ({ onClose }: IProps) => {
         }}
       />
 
+      <Button variant="light" className="w-full justify-start px-0" onPress={onForgotPassword}>
+        Забыли пароль?
+      </Button>
+
         {errorMessage && <p className="text-red-400">{errorMessage}</p>}
-      <div className="flex w-[100%]  gap-4 items-center pt-5 justify-end">
+      <div className="flex w-full  gap-4 items-center pt-5 justify-end">
         <Button variant="light" onPress={onClose}>
           Отмена
         </Button>

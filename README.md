@@ -35,3 +35,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # next-kitchen
+
+## Resend for password reset
+
+Set Resend env variables before using password recovery:
+
+```bash
+RESEND_API_KEY=re_xxxxxxxxx
+RESEND_FROM_EMAIL=onboarding@resend.dev
+```
