@@ -68,7 +68,7 @@ export default function Header() {
     }
 
   return (
-    <Navbar style={{height: layoutConfig.headerHeight }}>
+    <Navbar style={{ height: layoutConfig.headerHeight }}>
       <NavbarBrand>
         <Link className="flex gap-1 items-center" href="#">
         <AcmeLogo />
@@ -82,7 +82,7 @@ export default function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        {isAuth && <p>Привет, {session?.user?.firstName} {session?.user?.lastName}</p>}
+       {isAuth && <p>{session?.user?.firstName} {session?.user?.lastName}</p>}
        {status === 'loading' ? <p>Загрузка... </p>: isAuth ? (
       <NavbarItem>
       <Button
