@@ -12,7 +12,7 @@ const errors = {
 }
 
 export const registerUser = async (params: IFormData) => {
-  const {confirmPassword, password, email} = params;
+  const { confirmPassword, password, email, firstName, lastName } = params;
 
   if(confirmPassword !== password) {
     return { error: errors.passwordMismatch }
@@ -20,6 +20,10 @@ export const registerUser = async (params: IFormData) => {
 
   if(password.length < 6) {
     return { error: errors.passwordTooShort };
+  }
+
+  if (!firstName.trim() || !lastName.trim()) {
+    throw new Error("Имя и фамилия обязательны");
   }
 
   try {
@@ -38,6 +42,8 @@ export const registerUser = async (params: IFormData) => {
       data: {
         email,
         password: passwordHash,
+        firstName: firstName.trim(),
+        lastName: lastName.trim()
       }
     }) 
 
