@@ -49,40 +49,6 @@ const RegistrationForm = ({ onClose }: IProps) => {
   return (
     <Form className="w-full" onSubmit={handleSubmit}>
       <Input
-        aria-label="First name"
-        isRequired
-        name="firstName"
-        placeholder="Введите имя"
-        type="text"
-        value={formData.firstName}
-        classNames={{
-          inputWrapper: "bg-default-100",
-          input: "text-sm focus:outline-none "
-        }}
-        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-        validate={(value) => {
-          if (!value?.trim()) return "Имя обязательно";
-          return null;
-        }}
-      />
-      <Input
-        aria-label="Last name"
-        isRequired
-        name="lastName"
-        placeholder="Введите фамилию"
-        type="text"
-        value={formData.lastName}
-        classNames={{
-          inputWrapper: "bg-default-100",
-          input: "text-sm focus:outline-none "
-        }}
-        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-        validate={(value) => {
-          if (!value?.trim()) return "Фамилия обязательна";
-          return null;
-        }}
-      />
-      <Input
         aria-label="Email"
         isRequired
         name="email"
@@ -139,6 +105,41 @@ const RegistrationForm = ({ onClose }: IProps) => {
       />
 
     {errorMessage && <p className="text-red-400">{errorMessage}</p>}
+
+    <Input
+        aria-label="First name"
+        isRequired
+        name="firstName"
+        placeholder="Введите имя"
+        type="text"
+        value={formData.firstName}
+        classNames={{
+          inputWrapper: "bg-default-100",
+          input: "text-sm focus:outline-none "
+        }}
+        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+        validate={(value) => {
+          if (!value?.trim()) return "Имя обязательно";
+          return null;
+        }}
+      />
+      <Input
+        aria-label="Last name"
+        isRequired
+        name="lastName"
+        placeholder="Введите фамилию"
+        type="text"
+        value={formData.lastName}
+        classNames={{
+          inputWrapper: "bg-default-100",
+          input: "text-sm focus:outline-none "
+        }}
+        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+        validate={(value) => {
+          if (!value?.trim()) return "Фамилия обязательна";
+          return null;
+        }}
+      />
 
       <div className="flex w-[100%]  gap-4 items-center pt-8 justify-end">
          <Button variant="light" onPress={onClose}>

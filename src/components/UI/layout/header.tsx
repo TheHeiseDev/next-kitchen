@@ -82,7 +82,7 @@ export default function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        {isAuth && <p>Привет, {session?.user?.email}</p>}
+        {isAuth && <p>Привет, {session?.user?.firstName} {session?.user?.lastName}</p>}
        {status === 'loading' ? <p>Загрузка... </p>: isAuth ? (
       <NavbarItem>
       <Button
